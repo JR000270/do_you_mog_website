@@ -1,0 +1,14 @@
+face landmark detector:
+    """
+    Phase 1: Face landmark detection with MediaPipe Tasks.
+
+    Adapted from Google's official Face Landmarker Colab demo to run as a
+    standalone local script (no Colab-specific dependencies).
+
+    ONE-TIME SETUP (run in your terminal):
+        pip install mediapipe opencv-python matplotlib
+        curl -o face_landmarker.task -L https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+
+    USAGE:
+        python face_landmark_detect.py path/to/your/photo.jpg
+    """
