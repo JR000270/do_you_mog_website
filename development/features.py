@@ -248,7 +248,7 @@ def extract_features(landmarks, width, height) -> dict:
     Every feature here is normalized against face_height (landmark 10, top of
     forehead, to landmark 152, chin) — a single independent, stable reference
     measurement. This matters: dividing one raw scale-dependent measurement
-    by ANOTHER raw scale-dependent measurement (like eye_distance by
+    by another raw scale-dependent measurement (like eye_distance by
     cheekbone_distance) only partially cancels camera-distance effects, since
     both numbers move together as the face gets closer/farther from camera.
     Using one consistent reference for everything actually removes it.
@@ -257,14 +257,8 @@ def extract_features(landmarks, width, height) -> dict:
     (verify them against a MediaPipe face mesh index map — it's easy to grab
     the wrong point), compute a raw distance, then divide by face_height.
     """
-    face_height = _distance(landmarks, 10, 152, width, height)
-
-    raw_eye_distance = _distance(landmarks, 33, 263, width, height)
-    raw_cheekbone_distance = _distance(landmarks, 234, 454, width, height)
-
+    
     features = {
-        #"eye_distance_ratio": raw_eye_distance / face_height,
-        #"cheekbone_ratio": raw_cheekbone_distance / face_height,
         "jaw_angle": _jaw_angle(landmarks, width, height),
         "cheek_hollowness": _cheek_hollowness(landmarks, width, height),
         "eyebrow_position": _eyebrow_position(landmarks, width, height),

@@ -1,7 +1,7 @@
 """
 Trains a logistic regression mog-classifier on features.csv (from build_dataset.py).
-
-USAGE:
+uses scikit learn on the csv of features to train a logistic regression model, and saves it to mog_model.joblib.
+command:
     python train_model.py
 """
 

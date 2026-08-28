@@ -1,13 +1,13 @@
 """
 Walks labeled image folders and extracts features into a CSV for training.
 
-Expected folder layout (create this alongside your scripts):
+Expected folder layout:
     data/
-        mog/          <- photos that ARE making the mog face
+        mog/          <- photos that are making the mog face
             photo1.jpg
             photo2.png
             ...
-        not_mog/      <- photos that are NOT
+        not_mog/      <- photos that aren't making the mogging face
             photo1.jpg
             ...
 
@@ -21,7 +21,7 @@ from pathlib import Path
 from landmark_utils import create_detector, get_landmarks
 from features import extract_features
 
-DATA_DIR = Path("data")
+DATA_DIR = Path("../data/train")
 LABELS = {"mog": 1, "not_mog": 0}
 OUTPUT_CSV = "features.csv"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png"}

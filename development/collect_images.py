@@ -1,18 +1,29 @@
 import os
 import cv2
 
-DATA_DIR = './data'
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
+"""
+this is for adding in new images to the dataset. it will take a sample of images from the webcam and add them to the specified class folder in data.
+command(s): 
+cd development
+python collect_images.py
+"""
 
-class_choice = "not_mog"
+DATA_DIR = '../data/test' #replace with testor train the path to data folder. this is where the images will be saved
+class_choice = "not_mog" #replace with what folder in data to add to. mog, not mog
+if not os.path.exists(DATA_DIR):
+    #tell that directory does not exist
+    print(f"Directory {DATA_DIR} does not exist. Please create it and try again.")
+    exit(1)
+if not os.path.exists(os.path.join(DATA_DIR, class_choice)):
+    print(f"Directory {DATA_DIR} does not exist. Please create it and try again.")
+    exit(1)
+    # os.makedirs(os.path.join(DATA_DIR, class_choice))
+
 #how many images to add on to current
 sample_size = 20
 
 cap = cv2.VideoCapture(0)
-#for j in range(number_of_classes):
-if not os.path.exists(os.path.join(DATA_DIR, class_choice)):
-    os.makedirs(os.path.join(DATA_DIR, class_choice))
+
 
 print('Collecting data for class {}'.format(class_choice))
 
