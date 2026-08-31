@@ -16,6 +16,7 @@ MODEL_OUT = "mog_model.joblib"
 
 
 def main():
+    #turn the raw csv into a pandas dataframe, split it into features and labels
     df = pd.read_csv(FEATURES_CSV)
     feature_names = [c for c in df.columns if c not in ("filename", "label")]
 
