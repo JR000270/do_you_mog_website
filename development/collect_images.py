@@ -15,7 +15,7 @@ if not os.path.exists(DATA_DIR):
     print(f"Directory {DATA_DIR} does not exist. Please create it and try again.")
     exit(1)
 if not os.path.exists(os.path.join(DATA_DIR, class_choice)):
-    print(f"Directory {DATA_DIR} does not exist. Please create it and try again.")
+    print(f"Directory {os.path.join(DATA_DIR, class_choice)} does not exist. Please create it and try again.")
     exit(1)
     # os.makedirs(os.path.join(DATA_DIR, class_choice))
 
