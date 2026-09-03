@@ -43,7 +43,8 @@ def predict_image(image):
     # face's value for that feature. That's the number worth ranking to get
     # "most mogging features" for one photo.
     contributions = {
-        feature: coefficients[i] * x[feature].iloc[0]
+        #feature: coefficients[i] * x[feature].iloc[0]
+        feature_names[i]: coefficients[i] * x[feature_names[i]].iloc[0]
         for i, feature in enumerate(feature_names)
     }
 
@@ -59,7 +60,7 @@ def main():
     # Example usage of predict_image function
     test_image_path = "../data/test/mog/1.jpg"
     prediction, contributions = predict_image(test_image_path)
-    print(f"\nPrediction for {test_image_path}: {prediction:.2%} mog")
+    print(f"\nPrediction for {test_image_path}: {prediction:.2%} mog\n contributions: {contributions}")
 
 
 if __name__ == "__main__":
