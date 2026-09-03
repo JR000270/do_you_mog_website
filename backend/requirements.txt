@@ -1,0 +1,10 @@
+pandas
+pydantic
+scikit-learn
+fastapi
+uvicorn
+joblib
+tempfile
+opencv-python
+mediapipe
+numpy

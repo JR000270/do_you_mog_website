@@ -2,10 +2,7 @@
 Facial feature engineering.
 
 Each function turns raw landmark points into one numeric measurement.
-extract_features() combines them into a single named dict — using names
-(not just a bare list of numbers) matters later: it's what lets you map
-model coefficients back to "cheekbone_distance" for the goofy score sheet,
-instead of losing track of which number means what.
+extract_features() combines them into a single named dict
 """
 
 import numpy as np
