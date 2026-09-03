@@ -1,6 +1,6 @@
 # Do You Mog?
 
-A web app that scores how much a face "mogs" (a slang term for having a strong, dominant facial appearance). Upload a photo and a logistic regression model — trained on facial landmark geometry — returns a mog probability along with a breakdown of which facial features pushed the score up or down.
+A web app that scores how well a someone does a "mogging" face. Upload a photo and a logistic regression model — trained on facial landmark geometry — returns a mog probability along with a breakdown of which facial features pushed the score up or down.
 
 ## How it works
 
