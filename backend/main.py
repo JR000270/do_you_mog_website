@@ -19,6 +19,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def get_funny_comment(mog_probability):
+    #returns a funny comment based on the mogging score
+    if mog_probability < 0.2:
+        return "Lowkey built like a fetus ngl..."
+    elif mog_probability < 0.4:
+        return "You gotta lock in harder than that"
+    elif mog_probability < 0.6:
+        return "This is indeed some mogging right here"
+    elif mog_probability < 0.8:
+        return "SHEEESH! We gotta get you in a kitchen because you cooked!"
+    else:
+        return "HOLY COW BRUH! You make handsome squidward look ugly!!"
+
+
+def get_top_contributions(contributions):
+    #sorts the dictionary and returns the top 5 features with the highest positive contributions to the mogging score
+    top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True)[:5])
+    
+    #change the values to be on a 1 to 10 scale for frontend display
+    max_contribution = max(top_sorted_contributions.values()) if top_sorted_contributions else 1
+
+    #return a dictionary of the top 5 features with their contributions scaled to a 1 to 10 range
+    return {key: max(1, int((value / max_contribution) * 10)) for key, value in top_sorted_contributions.items()}
+
 #run the model on a single image that is sent to the backend from the frontend. return the result to the frontend
 @app.post("/analyze", response_model=dict)
 async def analyze_image(file: UploadFile) -> dict:
@@ -61,6 +85,8 @@ async def analyze_image(file: UploadFile) -> dict:
     #make a prediction, return the probability of being a mog
     #probability will be used as the mogging score in the frontend
     mog_probability = model.predict_proba(x)[0][1]
+    mog_probability = round(mog_probability, 0) #round to 0 decimal places for frontend display
+
 
     #get the components of the prediction
     coefficients = model.coef_[0]
@@ -71,10 +97,13 @@ async def analyze_image(file: UploadFile) -> dict:
         feature_names[i]: coefficients[i] * x[feature_names[i]].iloc[0]
         for i, feature in enumerate(feature_names)
     }
+    best_contributions = get_top_contributions(contributions) #get the top 5 features with the highest positive contributions to the mogging score
 
+    #add the analysis results to the dictionary
     results["mog_probability"] = mog_probability
-    results["contributions"] = contributions
-
+    #results["contributions"] = contributions
+    results["contributions"] = best_contributions
+    results["funny_comment"] = get_funny_comment(mog_probability)
     return results
 
 

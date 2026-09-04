@@ -1,15 +1,15 @@
 import React from 'react';
 import './App.css';
-import UploadForm from './components/UploadForm';
+import ImageProcessingPage from './components/ImageProcessingPage';
 
 const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Do You Mog?</h1>
+    <div className="bg-gray-900 min-h-screen flex flex-col items-center py-25">
+      <header>
+        <h1 className="text-4xl font-bold text-green-500">Do You Mog?</h1>
       </header>
       <main>
-        <UploadForm />
+        <ImageProcessingPage />
       </main>
     </div>
   );
