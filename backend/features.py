@@ -2,7 +2,10 @@
 Facial feature engineering.
 
 Each function turns raw landmark points into one numeric measurement.
-extract_features() combines them into a single named dict
+extract_features() combines them into a single named dict — using names
+(not just a bare list of numbers) matters later: it's what lets you map
+model coefficients back to "cheekbone_distance" for the goofy score sheet,
+instead of losing track of which number means what.
 """
 
 import numpy as np
@@ -240,21 +243,30 @@ def _head_roll(landmarks, width, height):
     return angle_deg
 
 def extract_features(landmarks, width, height) -> dict:
-    #Returns a dict of {feature_name: value} for one face.
+    """Returns a dict of {feature_name: value} for one face.
+
+    Every feature here is normalized against face_height (landmark 10, top of
+    forehead, to landmark 152, chin), done to negate things like camera-distance.
+
+    Add new features by following this same pattern: pick landmark indices
+    ,verify them against a MediaPipe face mesh index map, compute a raw distance, 
+    then divide by face_height.
+    """
+    
     features = {
-        "jaw_angle": _jaw_angle(landmarks, width, height),
-        "cheek_hollowness": _cheek_hollowness(landmarks, width, height),
-        "eyebrow_position": _eyebrow_position(landmarks, width, height),
-        "mouth_openness": _mouth_openness(landmarks, width, height),
-        "eye_openness": _eye_openness(landmarks, width, height),
+        "jaw angle": _jaw_angle(landmarks, width, height),
+        "hollow cheeks": _cheek_hollowness(landmarks, width, height),
+        "eyebrow pose": _eyebrow_position(landmarks, width, height),
+        "mouth openness": _mouth_openness(landmarks, width, height),
+        "eye openness": _eye_openness(landmarks, width, height),
         "eyelid_shape": _eyelid_shape(landmarks, width, height),
-        "mouth_width": _mouth_width(landmarks, width, height),
-        "left_eyebrow_position": _left_eyebrow_position(landmarks, width, height),
-        "right_eyebrow_position": _right_eyebrow_position(landmarks, width, height),
-        "eyebrow_asymmetry": _eyebrow_asymmetry(landmarks, width, height),
-        "head_pitch": _head_pitch(landmarks, width, height),
-        "head_yaw": _head_yaw(landmarks, width, height),
-        "head_roll": _head_roll(landmarks, width, height),
+        "lips pose": _mouth_width(landmarks, width, height),
+        "left eyebrow pose": _left_eyebrow_position(landmarks, width, height),
+        "right eyebrow pose": _right_eyebrow_position(landmarks, width, height),
+        "eyebrow asymmetry": _eyebrow_asymmetry(landmarks, width, height),
+        "head pitch": _head_pitch(landmarks, width, height),
+        "head yaw": _head_yaw(landmarks, width, height),
+        "head roll": _head_roll(landmarks, width, height),
     }
 
     return features

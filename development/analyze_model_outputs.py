@@ -33,8 +33,10 @@ def predict_image(image):
     #probability will be used as the mogging score in the frontend
     mog_probability = model.predict_proba(x)[0][1]
 
-    #get the components of the prediction
-    coefficients = model.coef_[0]
+    #the model is a Pipeline(scaler, clf) - pull out both stages
+    scaler = model.named_steps["scaler"]
+    clf = model.named_steps["clf"]
+    coefficients = clf.coef_[0]
 
     # Logistic regression scores a face by summing coef * feature_value for
     # every feature (plus an intercept), then squashing that sum into a
@@ -42,9 +44,13 @@ def predict_image(image):
     # to know how much it swung THIS face's score, you need coef * this
     # face's value for that feature. That's the number worth ranking to get
     # "most mogging features" for one photo.
+    #
+    # feature_value here must be the *scaled* value (same units the model was
+    # fit on) - otherwise features with large raw units (e.g. head_pitch in
+    # degrees) dominate the contribution purely due to scale, not importance.
+    x_scaled = scaler.transform(x)[0]
     contributions = {
-        #feature: coefficients[i] * x[feature].iloc[0]
-        feature_names[i]: coefficients[i] * x[feature_names[i]].iloc[0]
+        feature_names[i]: coefficients[i] * x_scaled[i]
         for i, feature in enumerate(feature_names)
     }
 
