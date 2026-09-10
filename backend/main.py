@@ -21,13 +21,15 @@ app.add_middleware(
 
 def get_funny_comment(mog_probability):
     #returns a funny comment based on the mogging score
-    if mog_probability < 0.2:
+    if mog_probability < 20:
         return "Lowkey built like a fetus ngl..."
-    elif mog_probability < 0.4:
+    elif mog_probability < 50:
         return "You gotta lock in harder than that"
-    elif mog_probability < 0.6:
+    elif mog_probability < 60:
         return "This is indeed some mogging right here"
-    elif mog_probability < 0.8:
+    elif mog_probability < 80:
+        return "Zayum! You making the camera blush!"
+    elif mog_probability < 90:
         return "SHEEESH! We gotta get you in a kitchen because you cooked!"
     else:
         return "HOLY COW BRUH! You make handsome squidward look ugly!!"
@@ -35,7 +37,9 @@ def get_funny_comment(mog_probability):
 
 def get_top_contributions(contributions):
     #sorts the dictionary and returns the top 5 features with the highest positive contributions to the mogging score
-    top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True)[:5])
+    #top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True)[:5])
+    top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True))
+
 
     if not top_sorted_contributions:
         return {}
