@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import api from '../api.js';
+import WebCam_Modal from './WebCam_Modal.jsx';
 
 //uploading image file to be analyzed by the model. submit button sends it
 // back to the backend for analysis.
@@ -24,6 +25,18 @@ const ImageProcessingPage = () => {
             console.error('Error analyzing the image:', error);
         }
     };
+
+
+    //webcam modal state management
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    //open webcam modal when the user clicks the button
+    const openWebcamModal = () => {
+        setIsModalOpen(true);
+    }
+    //called by the modal once the user captures a photo
+    const handleCapture = (file) => {
+        setSelectedFile(file);
+    }
 
 
     return (
@@ -66,10 +79,20 @@ const ImageProcessingPage = () => {
             </div>
             
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-                <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 border text-yellow-500 rounded mb-4 border-yellow-500 cursor-pointer " />
+                {/* Open webcam to upload photo or select from device */}
+                <div className="flex items-center gap-4 mb-4 py-10">
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 border text-yellow-500 rounded border-yellow-500 hover:bg-yellow-500 hover:text-white cursor-pointer " />
+                    <button type="button" onClick={openWebcamModal} className="px-4 py-2 border text-yellow-500 rounded border-yellow-500 cursor-pointer hover:bg-yellow-500 hover:text-white">Take a Photo</button>
+                </div>
                 <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600">Analyze</button>
             </form>
-            
+
+            <WebCam_Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onCapture={handleCapture}
+            />
+
         </div>
     );
 };
