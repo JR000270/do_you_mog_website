@@ -38,7 +38,8 @@ def get_funny_comment(mog_probability):
 def get_top_contributions(contributions):
     #sorts the dictionary and returns the top 5 features with the highest positive contributions to the mogging score
     #top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True)[:5])
-    top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True))
+    #all features
+    top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items()), key=lambda item: item[1], reverse=True))
 
 
     if not top_sorted_contributions:
@@ -116,7 +117,9 @@ async def analyze_image(file: UploadFile) -> dict:
     #dictionary of contributions of each feature to the prediction. feature: contribution pairs,
     #where contribution = model coefficient * standardized feature_value
     contributions = {
-        feature_names[i]: coefficients[i] * x_scaled[i]
+        # feature_names[i]: coefficients[i] * x_scaled[i]
+        feature_names[i]: x_scaled[i]
+        
         for i, feature in enumerate(feature_names)
     }
     best_contributions = get_top_contributions(contributions) #get the top 5 features with the highest positive contributions to the mogging score

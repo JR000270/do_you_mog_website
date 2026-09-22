@@ -259,14 +259,14 @@ def extract_features(landmarks, width, height) -> dict:
         "eyebrow pose": _eyebrow_position(landmarks, width, height),
         "mouth openness": _mouth_openness(landmarks, width, height),
         "eye openness": _eye_openness(landmarks, width, height),
-        "eyelid_shape": _eyelid_shape(landmarks, width, height),
+        #"eyelid shape": _eyelid_shape(landmarks, width, height),
         "lips pose": _mouth_width(landmarks, width, height),
         "left eyebrow pose": _left_eyebrow_position(landmarks, width, height),
         "right eyebrow pose": _right_eyebrow_position(landmarks, width, height),
         "eyebrow asymmetry": _eyebrow_asymmetry(landmarks, width, height),
-        "head pitch": _head_pitch(landmarks, width, height),
-        "head yaw": _head_yaw(landmarks, width, height),
-        "head roll": _head_roll(landmarks, width, height),
+        # "head pitch": _head_pitch(landmarks, width, height),
+        # "head yaw": _head_yaw(landmarks, width, height),
+        # "head roll": _head_roll(landmarks, width, height),
     }
 
     return features

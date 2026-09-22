@@ -1,3 +1,48 @@
+.main-background {
+  background: #0f1720;
+}
+
+.rays {
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2600px;
+  height: 2600px;
+  transform-origin: center center;
+  transform: translate(-50%, 42%) rotate(0deg);
+  background: repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(148, 163, 184, 0.28) 0deg 8deg,
+    transparent 8deg 20deg
+  );
+  animation: mog-spin 50s linear infinite;
+  pointer-events: none;
+}
+
+.dome {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 50%;
+  width: 560px;
+  height: 280px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 50% 100%, #94a3b8, #475569 70%);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 0 90px 30px rgba(100, 116, 139, 0.45);
+  pointer-events: none;
+}
+
+@keyframes mog-spin {
+  from {
+    transform: translate(-50%, 42%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, 42%) rotate(360deg);
+  }
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

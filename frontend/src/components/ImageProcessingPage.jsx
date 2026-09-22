@@ -64,7 +64,8 @@ const ImageProcessingPage = () => {
                 </div>
                 <div className="flex flex-col items-center px-10 py-7">
                     {analysis && (
-                        <motion.div initial={{x: -200, y: 25}} animate={{x:0}} transition={{duration:0.5}}>
+                        <motion.div initial={{x: -200, y: 25}} animate={{x:0}} transition={{duration:0.5}}
+                        className="backdrop:blur-sm bg-black/30 border border-yellow-500 p-4 rounded-lg">
                             <p className="text-lg font-medium text-gray-300">{analysis.funny_comment}</p>
                             <p className="text-lg font-medium text-gray-300">Mogging Score: {analysis.mog_probability}</p>
                             <h4 className="text-lg font-medium text-gray-300">Features Ratings:</h4>
@@ -81,8 +82,8 @@ const ImageProcessingPage = () => {
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                 {/* Open webcam to upload photo or select from device */}
                 <div className="flex items-center gap-4 mb-4 py-10">
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 border text-yellow-500 rounded border-yellow-500 hover:bg-yellow-500 hover:text-white cursor-pointer " />
-                    <button type="button" onClick={openWebcamModal} className="px-4 py-2 border text-yellow-500 rounded border-yellow-500 cursor-pointer hover:bg-yellow-500 hover:text-white">Take a Photo</button>
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 hover:bg-yellow-500 hover:text-white cursor-pointer " />
+                    <button type="button" onClick={openWebcamModal} className="px-4 py-2 backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 cursor-pointer hover:bg-yellow-500 hover:text-white">Take a Photo</button>
                 </div>
                 <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600">Analyze</button>
             </form>
