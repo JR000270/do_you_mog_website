@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, HTTPException
+from fastapi import FastAPI, UploadFile
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -38,8 +38,8 @@ def get_funny_comment(mog_probability):
 def get_top_contributions(contributions):
     #sorts the dictionary and returns the top 5 features with the highest positive contributions to the mogging score
     #top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True)[:5])
-    #all features
-    top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items()), key=lambda item: item[1], reverse=True))
+    #top 5 features
+    top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items()), key=lambda item: item[1], reverse=True)[:5])
 
 
     if not top_sorted_contributions:
@@ -90,7 +90,13 @@ async def analyze_image(file: UploadFile) -> dict:
         os.remove(tmp_path)
 
     if detection is None:
-        raise HTTPException(status_code=422, detail="No face detected in the uploaded image")
+        #no face found in the image - respond with the same shape as a
+        #successful analysis so the frontend can render it unchanged, just
+        #with a zero score and a prompt to upload a photo with a face
+        results["mog_probability"] = 0
+        results["contributions"] = {}
+        results["funny_comment"] = "No face detected - please upload a photo with a face!"
+        return results
 
     landmarks, width, height = detection
     features = extract_features(landmarks, width, height) #dictionary of feature:value pairs extracted from the image

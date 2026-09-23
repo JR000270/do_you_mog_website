@@ -16,7 +16,7 @@
     rgba(148, 163, 184, 0.28) 0deg 8deg,
     transparent 8deg 20deg
   );
-  animation: mog-spin 50s linear infinite;
+  animation: ray-spin 50s linear infinite;
   pointer-events: none;
 }
 
@@ -29,12 +29,13 @@
   height: 280px;
   transform: translateX(-50%);
   background: radial-gradient(circle at 50% 100%, #94a3b8, #475569 70%);
+  /* background: #475569; */
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   box-shadow: 0 0 90px 30px rgba(100, 116, 139, 0.45);
   pointer-events: none;
 }
 
-@keyframes mog-spin {
+@keyframes ray-spin {
   from {
     transform: translate(-50%, 42%) rotate(0deg);
   }

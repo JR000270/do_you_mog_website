@@ -79,6 +79,7 @@ const ImageProcessingPage = () => {
                 </div>
             </div>
             
+            {( !analysis && (
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                 {/* Open webcam to upload photo or select from device */}
                 <div className="flex items-center gap-4 mb-4 py-10">
@@ -87,6 +88,10 @@ const ImageProcessingPage = () => {
                 </div>
                 <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600">Analyze</button>
             </form>
+            ))} 
+            {(analysis &&(
+                <button onClick={() => {setSubmitted(false); setSelectedFile(null); setAnalysis(null);}} type="button" className="mt-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600">Try Another!</button>
+            ))}
 
             <WebCam_Modal
                 isOpen={isModalOpen}
