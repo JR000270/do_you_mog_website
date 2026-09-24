@@ -6,6 +6,7 @@ import joblib
 import pandas as pd
 import tempfile
 import os
+import random
 
 app = FastAPI()
 
@@ -19,20 +20,70 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#comment pools keyed by the lower bound of their tier (threshold <= mog_probability)
+FUNNY_COMMENTS = {
+    0: [
+        "You are not locked in",
+        "YIKES! Might wanna look up a guide",
+    ],
+    20: [
+        "Lowkey built like a fetus ngl...",
+        "Bro said 'ship it' before finishing the character creator",
+        "This is giving unfinished sim character",
+        "Certified L mogging detected",
+        "The mirror really said 'no thank you'",
+        "Buddy this is a rebuild-from-scratch situation",
+        "You ate a whole Thanksgiving feast, and left no crumbs for the rest of us",
+        "GYYYYAAAAAHHHH!!!!! LOOK AWAYYYY",
+    ],
+    50: [
+        "You gotta lock in harder than that",
+        "So close to mid, yet so far",
+        "Gym membership is calling your name",
+        "C+ effort, we've seen better",
+        "Almost had it, almost",
+        "Mid but climbing, respect the grind",
+    ],
+    60: [
+        "This is indeed some mogging right here",
+        "Okay okay, I see you twin!",
+        "Certified chad moment",
+        "Respectable numbers, keep it up",
+        "You're giving 'good bone structure' energy",
+        "Straight up solid",
+    ],
+    80: [
+        "Zayum! You making the camera blush!",
+        "The mogging levels are booming right now!",
+        "The confidence is radiating off this one",
+        "You ate that, and left no crumbs",
+        "Dont melt the camera hot stuf!",
+        "Camera said 'thank you for your service'",
+    ],
+    90: [
+        "SHEEESH! We gotta get you in a kitchen because you cooked!",
+        "Bro is not on the same difficulty setting as the rest of us",
+        "This is straight up unfair to the competition",
+        "Okay Greek statue, calm down",
+        "The mog is unmatched, take the W",
+        "Certified heartthrob, no cap",
+    ],
+    95: [
+        "HOLY COW BRUH! You make handsome squidward look ugly!!",
+        "Bro broke the mog-o-meter",
+        "This ain't even fair anymore, call the IRS because you took the whole budget",
+        "Genetics really said 'let's give this one everything'",
+        "Sistine Chapel ceiling but it's a face",
+        "Simulation error: too much mogging loaded at once",
+    ],
+}
+
 def get_funny_comment(mog_probability):
-    #returns a funny comment based on the mogging score
-    if mog_probability < 20:
-        return "Lowkey built like a fetus ngl..."
-    elif mog_probability < 50:
-        return "You gotta lock in harder than that"
-    elif mog_probability < 60:
-        return "This is indeed some mogging right here"
-    elif mog_probability < 80:
-        return "Zayum! You making the camera blush!"
-    elif mog_probability < 90:
-        return "SHEEESH! We gotta get you in a kitchen because you cooked!"
-    else:
-        return "HOLY COW BRUH! You make handsome squidward look ugly!!"
+    #each pool is keyed by the *lower* bound of its tier - use the pool for the
+    #highest threshold the score still meets or exceeds (e.g. 25 -> the 20 pool,
+    #15 -> the 0 pool)
+    rating_pool = max(threshold for threshold in FUNNY_COMMENTS if threshold <= mog_probability)
+    return random.choice(FUNNY_COMMENTS[rating_pool])
 
 
 def get_top_contributions(contributions):

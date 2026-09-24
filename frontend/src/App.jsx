@@ -27,8 +27,8 @@ const App = () => {
                   scale: [0,10,2],
                   y: 0,
                   transition: { duration: 1.5 },
-                   rotate: [0, 25, -25, 0]
-                  },
+                  rotate: [0, 25, -25, 0]
+                },
               }}
             >
               {word}

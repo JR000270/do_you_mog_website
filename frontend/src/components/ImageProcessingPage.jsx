@@ -46,7 +46,21 @@ const ImageProcessingPage = () => {
                 <div className="flex flex-col items-center">
                     {/*if a file has been uploaded display it here */}
                     {selectedFile && (
-                        <motion.div className="mt-4" initial={{scaleY: 0}} animate={{scaleY: 1, x: submitted ? 0 : 70}} transition={{duration:0.5}}>
+                        <motion.div className="mt-4"
+                          key={selectedFile.name + selectedFile.lastModified}
+                          style={{ transformPerspective: 1000 }}
+                          initial="hidden"
+                          animate="visible"
+                          variants={{
+                            hidden: {scale: 0, rotateY: 0},
+                            visible:
+                            {
+                                scale: [0, 1.7, ,1.8, 1.7, 1],
+                                rotateY: [0, 720, 720, 720],
+                                transition: {duration: 3, times: [0, 0.5, 0.83, 1], ease: "easeInOut"},
+                            }
+
+                        }}>
                             {/*If no analysis in yet -> potential mogger, otherwise based on probability -> mog or not mog */}
                             <h2 className={'text-2xl font-semibold ' + (!analysis ? "text-yellow-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
                             { 

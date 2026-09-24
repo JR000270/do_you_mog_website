@@ -39,7 +39,7 @@ export default function WebCam_Modal({ isOpen, onClose, onCapture }) {
             onClick={onClose}
         >
             {/* stop propagation so clicking the webcam/buttons doesn't bubble to the backdrop and close the modal */}
-            <div className="bg-gray-900 p-4 rounded-lg flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gray-900/40 p-7 rounded-lg flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
                 <Webcam
                     audio={false}
                     height={720}
