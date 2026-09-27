@@ -17,17 +17,23 @@ const App = () => {
           }}
           className="text-4xl font-bold text-yellow-500 flex gap-20"
         >
-          {["DO", "YOU", "MOG?"].map((word) => (
+          {["DO", "YOU", "MOG?"].map((word, index) => (
             <motion.span
               key={word}
               className="inline-block px-5 text-center"
               variants={{
-                hidden: { scale: 0, y: 800 },
+                hidden: { scale: 0, y: 800, x: 0 },
                 visible: {
                   scale: [0,10,2],
                   y: 0,
-                  transition: { duration: 1.5 },
-                  rotate: [0, 25, -25, 0]
+                  rotate: [0, 25, -25, 0],
+                  x: index === 0 ? 25 : 0,
+                  transition: {
+                    duration: 1.5,
+                    x: index === 0
+                      ? { delay: 1.5, duration: 0.4, ease: "easeOut" }
+                      : { duration: 0 },
+                  },
                 },
               }}
             >

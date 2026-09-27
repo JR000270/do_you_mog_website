@@ -62,12 +62,19 @@ const ImageProcessingPage = () => {
 
                         }}>
                             {/*If no analysis in yet -> potential mogger, otherwise based on probability -> mog or not mog */}
-                            <h2 className={'text-2xl font-semibold ' + (!analysis ? "text-yellow-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
-                            { 
+                            {/*key change on analysis arrival remounts the h2, retriggering the pop-in animation*/}
+                            <motion.h2
+                              key={analysis ? 'result' : 'pending'}
+                              initial={{ scale: 0, opacity: 0, rotate: -8 }}
+                              animate={{ scale: [0, 4, 0.9, 1], opacity: 1, rotate: 0 }}
+                              transition={{ duration: 0.6, ease: "easeOut" }}
+                           
+                              className={'text-2xl font-semibold ' + (!analysis ? "text-yellow-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
+                            {
                                 !analysis ? "Potential Mogger:" :
-                                    analysis && analysis.mog_probability >= 50 ? "Certified Mogger:" : "Not a Mogger:"
+                                    analysis && analysis.mog_probability >= 50 ? "YOU DOOO!" : "YOU DO NOT!"
                             }
-                            </h2>
+                            </motion.h2>
                             <img
                                 src={URL.createObjectURL(selectedFile)}
                                 alt="Uploaded Image"
@@ -81,7 +88,7 @@ const ImageProcessingPage = () => {
                         <motion.div initial={{x: -200, y: 25}} animate={{x:0}} transition={{duration:0.5}}
                         className="backdrop:blur-sm bg-black/30 border border-yellow-500 p-4 rounded-lg">
                             <p className="text-lg font-medium text-gray-300">{analysis.funny_comment}</p>
-                            <p className="text-lg font-medium text-gray-300">Mogging Score: {analysis.mog_probability}</p>
+                            <p className="text-lg font-medium text-gray-300">Score: {analysis.mog_probability}</p>
                             <h4 className="text-lg font-medium text-gray-300">Features Ratings:</h4>
                             <ul className="list-disc list-inside text-gray-300">
                                 {Object.entries(analysis.contributions).map(([feature, contribution]) => (

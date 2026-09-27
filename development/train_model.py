@@ -25,11 +25,8 @@ def main():
     X = df[feature_names]
     y = df["label"]
 
-    # At ~60 total images, a single 80/20 split leaves only ~12 test images —
-    # one or two misclassifications swing accuracy by 8-16 points. 5-fold
-    # cross-validation rotates through 5 different splits and averages the
+    #  5-fold cross-validation rotates through 5 different splits and averages the
     # result, giving a far more stable estimate of real performance.
-    #
     # The features mix wildly different natural scales — ratios like
     # "hollow cheeks" (~0-2) next to angles like "head pitch" (~-90 to 90).
     # Without StandardScaler, LogisticRegression still fits fine, but the
@@ -54,7 +51,7 @@ def main():
     # data generally means a better model, and you're not testing this copy.
     model.fit(X, y)
 
-    # This is your per-feature "story" — since logistic regression is a
+    # This is your per-feature scaling since logistic regression is a
     # weighted sum under the hood, each coefficient tells you how much that
     # feature pushes the prediction toward mog (positive) or away (negative),
     # and the magnitude signals how strongly it swings a given photo's score.
@@ -67,7 +64,33 @@ def main():
         direction = "-> mog" if coef > 0 else "-> not mog"
         print(f"  {name:25s} {coef:+.4f}  {direction}")
 
-    joblib.dump({"model": model, "feature_names": feature_names}, MODEL_OUT)
+    # Per-feature calibration for the frontend's 1-10 "feature rating" display.
+    # The old approach min-max scaled a photo's top-5 contributions *against
+    # each other*, so whichever feature naturally swings hardest (bigger
+    # coefficient, wider spread, whatever) always hit 10 and forced the other
+    # four toward 1 - regardless of whether those four were actually weak.
+    # Instead, score each feature against the range of contributions that particular
+    # feature produces across the training set, independent of what else
+    # shows up in a given photo's top 5.
+    #
+    # Using the 5th/95th percentile rather than raw min/max keeps one unusual
+    # training photo from single-handedly setting a feature's whole scale -
+    # with ~119 rows that excludes ~6 rows on each tail.
+    scaler_fitted = model.named_steps["scaler"]
+    x_scaled_all = scaler_fitted.transform(X)
+    contributions_all = x_scaled_all * clf.coef_[0]  # broadcasts per column
+    feature_bounds = {
+        name: (
+            float(np.percentile(contributions_all[:, i], 5)),
+            float(np.percentile(contributions_all[:, i], 95)),
+        )
+        for i, name in enumerate(feature_names)
+    }
+
+    joblib.dump(
+        {"model": model, "feature_names": feature_names, "feature_bounds": feature_bounds},
+        MODEL_OUT,
+    )
     print(f"\nSaved model to {MODEL_OUT}")
 
 

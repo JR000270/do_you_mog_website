@@ -30,17 +30,17 @@ FUNNY_COMMENTS = {
         "Lowkey built like a fetus ngl...",
         "Bro said 'ship it' before finishing the character creator",
         "This is giving unfinished sim character",
-        "Certified L mogging detected",
+        "This is trash",
         "The mirror really said 'no thank you'",
         "Buddy this is a rebuild-from-scratch situation",
-        "You ate a whole Thanksgiving feast, and left no crumbs for the rest of us",
+        "What are ya dooiin",
         "GYYYYAAAAAHHHH!!!!! LOOK AWAYYYY",
     ],
     50: [
         "You gotta lock in harder than that",
         "So close to mid, yet so far",
         "Gym membership is calling your name",
-        "C+ effort, we've seen better",
+        "C++ for effort, we've seen better",
         "Almost had it, almost",
         "Mid but climbing, respect the grind",
     ],
@@ -86,7 +86,7 @@ def get_funny_comment(mog_probability):
     return random.choice(FUNNY_COMMENTS[rating_pool])
 
 
-def get_top_contributions(contributions):
+def get_top_contributions(contributions, feature_bounds):
     #sorts the dictionary and returns the top 5 features with the highest positive contributions to the mogging score
     #top_sorted_contributions = dict(sorted(((key, value) for key, value in contributions.items() if value > 0), key=lambda item: item[1], reverse=True)[:5])
     #top 5 features
@@ -96,19 +96,25 @@ def get_top_contributions(contributions):
     if not top_sorted_contributions:
         return {}
 
-    #min-max scale the top 5 contributions against each other (not against a
-    #single global max) so the spread actually uses the 1-10 range instead of
-    #every non-winning feature flooring to the same value
-    min_contribution = min(top_sorted_contributions.values())
-    max_contribution = max(top_sorted_contributions.values())
+    #scale each feature's contribution against ITS OWN calibrated range (the
+    #5th/95th percentile of that feature's contribution across the training
+    #set - see train_model.py) instead of min-maxing the top 5 against each
+    #other. Row-relative scaling forced every non-dominant feature toward 1
+    #whenever one feature naturally swings harder than the rest; a fixed
+    #per-feature scale means a rating reflects how strong that feature really
+    #is, not just how it stacks up against whoever else made this top 5.
+    result = {}
+    for key, value in top_sorted_contributions.items():
+        low, high = feature_bounds[key]
+        if high == low:
+            result[key] = 10
+            continue
+        scaled = 1 + (value - low) / (high - low) * 9
+        #a live photo can fall outside the training set's calibration range,
+        #so clip to keep the displayed rating within 1-10
+        result[key] = round(min(10, max(1, scaled)))
 
-    if max_contribution == min_contribution:
-        return {key: 10 for key in top_sorted_contributions}
-
-    return {
-        key: round(1 + (value - min_contribution) / (max_contribution - min_contribution) * 9)
-        for key, value in top_sorted_contributions.items()
-    }
+    return result
 
 #run the model on a single image that is sent to the backend from the frontend. return the result to the frontend
 @app.post("/analyze", response_model=dict)
@@ -117,6 +123,7 @@ async def analyze_image(file: UploadFile) -> dict:
     saved = joblib.load("mog_model.joblib")
     model = saved["model"]
     feature_names = saved["feature_names"]
+    feature_bounds = saved["feature_bounds"]
 
     #dictionary to hold all the results
     results = {}
@@ -174,12 +181,12 @@ async def analyze_image(file: UploadFile) -> dict:
     #dictionary of contributions of each feature to the prediction. feature: contribution pairs,
     #where contribution = model coefficient * standardized feature_value
     contributions = {
-        # feature_names[i]: coefficients[i] * x_scaled[i]
-        feature_names[i]: x_scaled[i]
+        feature_names[i]: coefficients[i] * x_scaled[i]
+        #feature_names[i]: x_scaled[i]
         
         for i, feature in enumerate(feature_names)
     }
-    best_contributions = get_top_contributions(contributions) #get the top 5 features with the highest positive contributions to the mogging score
+    best_contributions = get_top_contributions(contributions, feature_bounds) #get the top 5 features with the highest positive contributions to the mogging score
 
     #add the analysis results to the dictionary
     results["mog_probability"] = mog_probability
