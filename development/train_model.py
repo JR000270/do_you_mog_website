@@ -10,6 +10,8 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 FEATURES_CSV = "features.csv"
 MODEL_OUT = "mog_model.joblib"
@@ -23,11 +25,21 @@ def main():
     X = df[feature_names]
     y = df["label"]
 
-    # At ~60 total images, a single 80/20 split leaves only ~12 test images —
-    # one or two misclassifications swing accuracy by 8-16 points. 5-fold
-    # cross-validation rotates through 5 different splits and averages the
+    #  5-fold cross-validation rotates through 5 different splits and averages the
     # result, giving a far more stable estimate of real performance.
-    model = LogisticRegression(max_iter=1000)
+    # The features mix wildly different natural scales — ratios like
+    # "hollow cheeks" (~0-2) next to angles like "head pitch" (~-90 to 90).
+    # Without StandardScaler, LogisticRegression still fits fine, but the
+    # resulting coefficients aren't comparable to each other: a feature's
+    # coefficient partly just reflects "how big are this feature's raw
+    # values", not how predictive it is. Scaling puts every feature in units
+    # of standard deviations from its mean, so coefficients (and later,
+    # coef * scaled_value contributions) are actually comparable across
+    # features.
+    model = Pipeline([
+        ("scaler", StandardScaler()),
+        ("clf", LogisticRegression(max_iter=1000)),
+    ])
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     scores = cross_val_score(model, X, y, cv=cv)
 
@@ -39,17 +51,46 @@ def main():
     # data generally means a better model, and you're not testing this copy.
     model.fit(X, y)
 
-    # This is your per-feature "story" — since logistic regression is a
+    # This is your per-feature scaling since logistic regression is a
     # weighted sum under the hood, each coefficient tells you how much that
     # feature pushes the prediction toward mog (positive) or away (negative),
     # and the magnitude signals how strongly it swings a given photo's score.
-    print("\nFeature coefficients (sorted by influence):")
-    coeffs = sorted(zip(feature_names, model.coef_[0]), key=lambda x: -abs(x[1]))
+    # These coefficients are on standardized features, so magnitudes are now
+    # directly comparable across features.
+    clf = model.named_steps["clf"]
+    print("\nFeature coefficients (sorted by influence, on standardized features):")
+    coeffs = sorted(zip(feature_names, clf.coef_[0]), key=lambda x: -abs(x[1]))
     for name, coef in coeffs:
-        direction = "→ mog" if coef > 0 else "→ not mog"
+        direction = "-> mog" if coef > 0 else "-> not mog"
         print(f"  {name:25s} {coef:+.4f}  {direction}")
 
-    joblib.dump({"model": model, "feature_names": feature_names}, MODEL_OUT)
+    # Per-feature calibration for the frontend's 1-10 "feature rating" display.
+    # The old approach min-max scaled a photo's top-5 contributions *against
+    # each other*, so whichever feature naturally swings hardest (bigger
+    # coefficient, wider spread, whatever) always hit 10 and forced the other
+    # four toward 1 - regardless of whether those four were actually weak.
+    # Instead, score each feature against the range of contributions that particular
+    # feature produces across the training set, independent of what else
+    # shows up in a given photo's top 5.
+    #
+    # Using the 5th/95th percentile rather than raw min/max keeps one unusual
+    # training photo from single-handedly setting a feature's whole scale -
+    # with ~119 rows that excludes ~6 rows on each tail.
+    scaler_fitted = model.named_steps["scaler"]
+    x_scaled_all = scaler_fitted.transform(X)
+    contributions_all = x_scaled_all * clf.coef_[0]  # broadcasts per column
+    feature_bounds = {
+        name: (
+            float(np.percentile(contributions_all[:, i], 5)),
+            float(np.percentile(contributions_all[:, i], 95)),
+        )
+        for i, name in enumerate(feature_names)
+    }
+
+    joblib.dump(
+        {"model": model, "feature_names": feature_names, "feature_bounds": feature_bounds},
+        MODEL_OUT,
+    )
     print(f"\nSaved model to {MODEL_OUT}")
 
 
