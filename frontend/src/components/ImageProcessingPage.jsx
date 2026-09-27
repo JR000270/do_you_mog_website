@@ -66,10 +66,10 @@ const ImageProcessingPage = () => {
                             <motion.h2
                               key={analysis ? 'result' : 'pending'}
                               initial={{ scale: 0, opacity: 0, rotate: -8 }}
-                              animate={{ scale: [0, 4, 0.9, 1], opacity: 1, rotate: 0 }}
-                              transition={{ duration: 0.6, ease: "easeOut" }}
+                              animate={{ scale: [0, 10, 0.9, 1], opacity: 1, rotate: 0 }}
+                              transition={{ duration: 2, ease: "easeOut" }}
                            
-                              className={'text-2xl font-semibold ' + (!analysis ? "text-yellow-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
+                              className={'text-2xl font-display font-semibold ' + (!analysis ? "text-yellow-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
                             {
                                 !analysis ? "Potential Mogger:" :
                                     analysis && analysis.mog_probability >= 50 ? "YOU DOOO!" : "YOU DO NOT!"
@@ -87,10 +87,10 @@ const ImageProcessingPage = () => {
                     {analysis && (
                         <motion.div initial={{x: -200, y: 25}} animate={{x:0}} transition={{duration:0.5}}
                         className="backdrop:blur-sm bg-black/30 border border-yellow-500 p-4 rounded-lg">
-                            <p className="text-lg font-medium text-gray-300">{analysis.funny_comment}</p>
-                            <p className="text-lg font-medium text-gray-300">Score: {analysis.mog_probability}</p>
-                            <h4 className="text-lg font-medium text-gray-300">Features Ratings:</h4>
-                            <ul className="list-disc list-inside text-gray-300">
+                            <p className="text-lg font-display font-medium text-gray-300">{analysis.funny_comment}</p>
+                            <p className="text-lg font-display font-medium text-gray-300">Score: {analysis.mog_probability}</p>
+                            <h4 className="text-lg font-display font-medium text-gray-300">Features Ratings:</h4>
+                            <ul className="font-display list-disc list-inside text-gray-300">
                                 {Object.entries(analysis.contributions).map(([feature, contribution]) => (
                                     <li key={feature} className="text-gray-300"> {feature}: {contribution}/10 </li>
                                 ))}
@@ -104,14 +104,14 @@ const ImageProcessingPage = () => {
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                 {/* Open webcam to upload photo or select from device */}
                 <div className="flex items-center gap-4 mb-4 py-10">
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 hover:bg-yellow-500 hover:text-white cursor-pointer " />
-                    <button type="button" onClick={openWebcamModal} className="px-4 py-2 backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 cursor-pointer hover:bg-yellow-500 hover:text-white">Take a Photo</button>
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 font-display backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 hover:bg-yellow-500 hover:text-white cursor-pointer " />
+                    <button type="button" onClick={openWebcamModal} className="px-4 py-2 font-display backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 cursor-pointer hover:bg-yellow-500 hover:text-white">Take a Photo</button>
                 </div>
-                <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600">Analyze</button>
+                <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-yellow-500 text-white font-display rounded hover:bg-yellow-600">Analyze</button>
             </form>
             ))} 
             {(analysis &&(
-                <button onClick={() => {setSubmitted(false); setSelectedFile(null); setAnalysis(null);}} type="button" className="mt-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600">Try Another!</button>
+                <button onClick={() => {setSubmitted(false); setSelectedFile(null); setAnalysis(null);}} type="button" className="mt-4 px-4 py-2 bg-yellow-500 text-white font-display rounded hover:bg-yellow-600">Try Another!</button>
             ))}
 
             <WebCam_Modal

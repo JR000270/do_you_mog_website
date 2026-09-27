@@ -57,7 +57,7 @@ FUNNY_COMMENTS = {
         "The mogging levels are booming right now!",
         "The confidence is radiating off this one",
         "You ate that, and left no crumbs",
-        "Dont melt the camera hot stuf!",
+        "Dont melt the camera hot stuff!",
         "Camera said 'thank you for your service'",
     ],
     90: [
@@ -66,7 +66,7 @@ FUNNY_COMMENTS = {
         "This is straight up unfair to the competition",
         "Okay Greek statue, calm down",
         "The mog is unmatched, take the W",
-        "Certified heartthrob, no cap",
+        "Gonna make me act up, no cap",
     ],
     95: [
         "HOLY COW BRUH! You make handsome squidward look ugly!!",
