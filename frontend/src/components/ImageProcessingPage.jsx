@@ -72,7 +72,7 @@ const ImageProcessingPage = () => {
                               className={'text-2xl font-display font-semibold ' + (!analysis ? "text-yellow-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
                             {
                                 !analysis ? "Potential Mogger:" :
-                                    analysis && analysis.mog_probability >= 50 ? "YOU DOOO!" : "YOU DO NOT!"
+                                    analysis && analysis.mog_probability >= 50 ? "YOU CERTAINLY DO!" : "YOU DO NOT!"
                             }
                             </motion.h2>
                             <img

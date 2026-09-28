@@ -56,7 +56,7 @@ FUNNY_COMMENTS = {
         "Zayum! You making the camera blush!",
         "The mogging levels are booming right now!",
         "The confidence is radiating off this one",
-        "You ate that, and left no crumbs",
+        "Have you been bone mashing lately??",
         "Dont melt the camera hot stuff!",
         "Camera said 'thank you for your service'",
     ],
