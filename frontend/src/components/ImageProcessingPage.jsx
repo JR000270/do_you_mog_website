@@ -69,10 +69,10 @@ const ImageProcessingPage = () => {
                               animate={{ scale: [0, 10, 0.9, 1], opacity: 1, rotate: 0 }}
                               transition={{ duration: 2, ease: "easeOut" }}
                            
-                              className={'text-2xl font-display font-semibold ' + (!analysis ? "text-yellow-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
+                              className={'text-2xl font-display font-semibold ' + (!analysis ? "text-purple-500" : analysis && analysis.mog_probability >= 50 ? "text-green-500" : "text-red-500")}>
                             {
                                 !analysis ? "Potential Mogger:" :
-                                    analysis && analysis.mog_probability >= 50 ? "YOU DOOO!" : "YOU DO NOT!"
+                                    analysis && analysis.mog_probability >= 50 ? "YOU CERTAINLY DO!" : "YOU DO NOT!"
                             }
                             </motion.h2>
                             <img
@@ -86,7 +86,7 @@ const ImageProcessingPage = () => {
                 <div className="flex flex-col items-center px-10 py-7">
                     {analysis && (
                         <motion.div initial={{x: -200, y: 25}} animate={{x:0}} transition={{duration:0.5}}
-                        className="backdrop:blur-sm bg-black/30 border border-yellow-500 p-4 rounded-lg">
+                        className="backdrop:blur-sm bg-black/30 border border-purple-500 p-4 rounded-lg">
                             <p className="text-lg font-display font-medium text-gray-300">{analysis.funny_comment}</p>
                             <p className="text-lg font-display font-medium text-gray-300">Score: {analysis.mog_probability}</p>
                             <h4 className="text-lg font-display font-medium text-gray-300">Features Ratings:</h4>
@@ -104,14 +104,31 @@ const ImageProcessingPage = () => {
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                 {/* Open webcam to upload photo or select from device */}
                 <div className="flex items-center gap-4 mb-4 py-10">
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 font-display backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 hover:bg-yellow-500 hover:text-white cursor-pointer " />
-                    <button type="button" onClick={openWebcamModal} className="px-4 py-2 font-display backdrop:blur-sm bg-black/30 border text-yellow-500 rounded border-yellow-500 cursor-pointer hover:bg-yellow-500 hover:text-white">Take a Photo</button>
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 font-display backdrop:blur-sm bg-black/30 border text-purple-500 rounded border-purple-500 hover:bg-purple-500 hover:text-white cursor-pointer " />
+                    <button type="button" onClick={openWebcamModal} className="px-4 py-2 font-display backdrop:blur-sm bg-black/30 border text-purple-500 rounded border-purple-500 cursor-pointer hover:bg-purple-500 hover:text-white">Take a Photo</button>
                 </div>
-                <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-yellow-500 text-white font-display rounded hover:bg-yellow-600">Analyze</button>
+                <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-purple-500 text-white font-display rounded hover:bg-purple-600">Analyze</button>
             </form>
             ))} 
+            {( submitted && !analysis &&(
+                <div className="flex items-center justify-center py-16">
+                    <motion.h2
+                        className="text-4xl md:text-6xl font-display font-bold text-purple-400 select-none"
+                        animate={{
+                            y: [-5, -18, -5, 18, -5],
+                            rotate: [-7, 0, 7, 0, -7],
+                        }}
+                        transition={{
+                            y: { duration: 2.4, repeat: Infinity, ease: "easeInOut" },
+                            rotate: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
+                        }}
+                    >
+                        Scanning for mogging...
+                    </motion.h2>
+                </div>
+            ))}
             {(analysis &&(
-                <button onClick={() => {setSubmitted(false); setSelectedFile(null); setAnalysis(null);}} type="button" className="mt-4 px-4 py-2 bg-yellow-500 text-white font-display rounded hover:bg-yellow-600">Try Another!</button>
+                <button onClick={() => {setSubmitted(false); setSelectedFile(null); setAnalysis(null);}} type="button" className="mt-4 px-4 py-2 bg-purple-500 text-white font-display rounded hover:bg-purple-600">Try Another!</button>
             ))}
 
             <WebCam_Modal

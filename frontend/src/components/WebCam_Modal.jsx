@@ -53,7 +53,7 @@ export default function WebCam_Modal({ isOpen, onClose, onCapture }) {
                     <button
                         type="button"
                         onClick={handleCapture}
-                        className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600"
+                        className="px-4 py-2 bg-purple-500 text-white font-semibold rounded hover:bg-purple-600"
                     >
                         Capture photo
                     </button>

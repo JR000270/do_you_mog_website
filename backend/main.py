@@ -10,7 +10,7 @@ import random
 
 app = FastAPI()
 
-origins = ["http://localhost:8000", "http://localhost:5173"]
+origins = ["http://localhost:8000", "http://localhost:5173", "https://mog-backend.victorioushill-817f366a.centralus.azurecontainerapps.io", "https://do-you-mog.web.app"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,10 +29,10 @@ FUNNY_COMMENTS = {
     20: [
         "Lowkey built like a fetus ngl...",
         "Bro said 'ship it' before finishing the character creator",
-        "This is giving unfinished sim character",
+        "This is like an unfinished sim character",
         "This is trash",
         "The mirror really said 'no thank you'",
-        "Buddy this is a rebuild-from-scratch situation",
+        "You might need to rebuild-from-scratch",
         "What are ya dooiin",
         "GYYYYAAAAAHHHH!!!!! LOOK AWAYYYY",
     ],
@@ -42,38 +42,37 @@ FUNNY_COMMENTS = {
         "Gym membership is calling your name",
         "C++ for effort, we've seen better",
         "Almost had it, almost",
-        "Mid but climbing, respect the grind",
+        "Mid",
     ],
     60: [
         "This is indeed some mogging right here",
         "Okay okay, I see you twin!",
         "Certified chad moment",
         "Respectable numbers, keep it up",
-        "You're giving 'good bone structure' energy",
+        "Good bone structure going here",
         "Straight up solid",
     ],
     80: [
         "Zayum! You making the camera blush!",
         "The mogging levels are booming right now!",
         "The confidence is radiating off this one",
-        "You ate that, and left no crumbs",
+        "Have you been bone mashing lately??",
         "Dont melt the camera hot stuff!",
         "Camera said 'thank you for your service'",
     ],
     90: [
         "SHEEESH! We gotta get you in a kitchen because you cooked!",
         "Bro is not on the same difficulty setting as the rest of us",
-        "This is straight up unfair to the competition",
-        "Okay Greek statue, calm down",
-        "The mog is unmatched, take the W",
+        "Who can compete with this??!!",
+        "You look like a Greek statue",
+        "Your mogging is unmatched!",
         "Gonna make me act up, no cap",
     ],
     95: [
         "HOLY COW BRUH! You make handsome squidward look ugly!!",
         "Bro broke the mog-o-meter",
         "This ain't even fair anymore, call the IRS because you took the whole budget",
-        "Genetics really said 'let's give this one everything'",
-        "Sistine Chapel ceiling but it's a face",
+        "Genetics really said 'let's give this all the goods'",
         "Simulation error: too much mogging loaded at once",
     ],
 }
