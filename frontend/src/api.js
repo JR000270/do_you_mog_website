@@ -3,7 +3,7 @@ import axios from 'axios';
 
 //create instance of axios with the base URL
 const api = axios.create({
-    baseURL: "http://localhost:8000" //port/url the backend is running on
+    baseURL: "https://mog-backend.victorioushill-817f366a.centralus.azurecontainerapps.io" //port/url the backend is running on
 });
 
 //export axios instance
