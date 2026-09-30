@@ -15,12 +15,12 @@ const App = () => {
           variants={{
             visible: { transition: { staggerChildren: 0.7 } },
           }}
-          className="text-4xl font-bold font-display text-purple-500 flex gap-20"
+          className="text-2xl sm:text-4xl font-bold font-display text-purple-500 flex gap-12 sm:gap-20"
         >
           {["DO", "YOU", "MOG?"].map((word, index) => (
             <motion.span
               key={word}
-              className="inline-block px-5 text-center"
+              className="inline-block px-3 sm:px-5 text-center"
               variants={{
                 hidden: { scale: 0, y: 800, x: 0 },
                 visible: {

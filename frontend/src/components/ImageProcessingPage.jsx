@@ -40,9 +40,9 @@ const ImageProcessingPage = () => {
 
 
     return (
-        <div className="py-10">
-            {/*two columns setup, left for uploaded image and right for the analysis*/}
-            <div className="flex flex-row">
+        <div className="w-full py-10 flex flex-col items-center">
+            {/*stacked on phones, two columns (image left, analysis right) from md (768px) up*/}
+            <div className="flex flex-col md:flex-row items-center md:items-start w-full">
                 <div className="flex flex-col items-center">
                     {/*if a file has been uploaded display it here */}
                     {selectedFile && (
@@ -55,7 +55,7 @@ const ImageProcessingPage = () => {
                             hidden: {scale: 0, rotateY: 0},
                             visible:
                             {
-                                scale: [0, 1.7, ,1.8, 1.7, 1],
+                                scale: [0, 1.7, 1.8, 1.7, 1],
                                 rotateY: [0, 720, 720, 720],
                                 transition: {duration: 3, times: [0, 0.5, 0.83, 1], ease: "easeInOut"},
                             }
@@ -78,12 +78,12 @@ const ImageProcessingPage = () => {
                             <img
                                 src={URL.createObjectURL(selectedFile)}
                                 alt="Uploaded Image"
-                                className="mt-2 w-75 h-100 object-cover rounded-lg"
+                                className="mt-2 w-full max-w-75 aspect-3/4 object-cover rounded-lg"
                             />
                         </motion.div>
                     )}
                 </div>
-                <div className="flex flex-col items-center px-10 py-7">
+                <div className="flex flex-col items-center w-full md:w-auto px-0 md:px-10 py-7">
                     {analysis && (
                         <motion.div initial={{x: -200, y: 25}} animate={{x:0}} transition={{duration:0.5}}
                         className="backdrop:blur-sm bg-black/30 border border-purple-500 p-4 rounded-lg">
@@ -103,8 +103,8 @@ const ImageProcessingPage = () => {
             {( !analysis && (
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                 {/* Open webcam to upload photo or select from device */}
-                <div className="flex items-center gap-4 mb-4 py-10">
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="p-2 font-display backdrop:blur-sm bg-black/30 border text-purple-500 rounded border-purple-500 hover:bg-purple-500 hover:text-white cursor-pointer " />
+                <div className="flex flex-col sm:flex-row items-center gap-4 mb-4 py-10">
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="w-full sm:w-auto p-2 font-display backdrop:blur-sm bg-black/30 border text-purple-500 rounded border-purple-500 hover:bg-purple-500 hover:text-white cursor-pointer " />
                     <button type="button" onClick={openWebcamModal} className="px-4 py-2 font-display backdrop:blur-sm bg-black/30 border text-purple-500 rounded border-purple-500 cursor-pointer hover:bg-purple-500 hover:text-white">Take a Photo</button>
                 </div>
                 <button onClick={() => setSubmitted(true)} type="submit" disabled={!selectedFile} className="mt-4 px-4 py-2 bg-purple-500 text-white font-display rounded hover:bg-purple-600">Analyze</button>
